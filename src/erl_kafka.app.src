@@ -1,0 +1,12 @@
+{application, erl_kafka,
+ [
+  {description, "Wrapper for Kafka functionality, relying on the brod erlang implementation."},
+  {vsn, git},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { erl_kafka_app, []}},
+  {env, []}
+ ]}.
