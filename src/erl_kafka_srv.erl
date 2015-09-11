@@ -34,9 +34,19 @@ start_link() ->
 %% ------------------------------------------------------------------
 
 init(Args) ->
-    Hosts = [{"172.17.4.253", 9092}],
-    {ok, Producer} = brod:start_link_producer(Hosts),
+    KafkaBrokers = get_kafka_brokers()
+    {ok, Producer} = brod:start_link_producer(KafkaBrokers),
     {ok, #state{producer=Producer}}.
+
+get_kafka_brokers() ->
+    KafkaBrokers = elibs_application:get_env(erl_kafka, kafka_brokers, []),
+    case KafkaBrokers of
+        [_|_] ->
+            [elibs_types:str(Broker) || Broker <- KafkaBrokers];
+        [] ->
+            ?WARNING("No brokers specified in application config.", []),
+            []
+    end.
 
 handle_call(_Request, _From, State) ->
     {reply, ok, State}.
